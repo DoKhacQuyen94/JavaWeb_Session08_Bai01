@@ -1,0 +1,8 @@
+1. Tại sao lọt khoảng trắng vào Database?
+Nguyên nhân: Annotation @NotNull chỉ kiểm tra xem giá trị có bị null hay không.
+Vấn đề: Khi người dùng nhập dấu cách (space), giá trị gửi lên là một chuỗi rỗng " " hoặc "". Về mặt logic, chuỗi này không phải null, nên @NotNull coi đó là hợp lệ và cho phép đi tiếp vào Database.
+2. Tại sao không chặn được request từ Postman và gây lỗi 500?
+Thiếu @Valid hoặc @Validated: Trong hàm updateAddress ở Controller, bạn đã nhận AddressDto nhưng lại quên gắn annotation @Valid trước @RequestBody.
+Kết quả: Spring sẽ bỏ qua việc kiểm tra các nhãn dán validation trong DTO.
+Lỗi 500: Khi request từ Postman gửi dữ liệu sai, hệ thống không chặn được ở tầng Validation mà đi thẳng vào tầng Logic/Database.
+Nếu tầng Database có ràng buộc NOT NULL, nó sẽ quăng ngoại lệ (Exception). Vì bạn không xử lý Exception này, Spring sẽ trả về lỗi mặc định là 500 Internal Server Error.
